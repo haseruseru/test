@@ -1,0 +1,577 @@
+package testProject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class poker_joker {
+
+	static int score =0;
+
+		public static void main(String[] args) {
+			boolean play = true;
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			String s="";
+			Pattern p = Pattern.compile("^[0-1]$");
+			Matcher m;
+		do{
+			//1~13が♠、14~26が♥、27~39が♦、40~52が♣、53,54をジョーカーとして扱う
+			int cards[] =new int[54];
+
+			//配列cardsの要素それぞれに1~52までの数字を代入する
+			for(int i=0;i<cards.length;i++){
+
+				cards[i] = i+1;
+
+			}
+
+			//deelCardsメソッドで配列cardsの要素からランダムで重複しない値を５つ持つ配列handを生成する
+			int hand[] = deelCards(cards);
+
+			/*テスト用
+			hand[0]=1;
+			hand[1]=11;
+			hand[2]=12;
+			hand[3]=13;
+			hand[4]=53;
+			*/
+
+			//getCardNameメソッドで配列handの要素の値を、それぞれのカードを表す文字列に変換して表示させる。
+			for(int i=0;i<hand.length;i++){
+
+				System.out.print("【"+getCardName(hand[i])+"】");
+
+			}
+
+			//judgeメソッドで配列handの各要素の値からポーカーのどの役が当てはまるか判定し、結果を文字列で変数resultに代入する
+			String result = judge(hand);
+
+			//結果を表示する
+			System.out.println("\n役："+ result);
+
+			//カードを変更する
+			hand = changeCards(hand,cards);
+
+			//変更時に0が入力されて0が返ってきていなければ下記を実行する
+			if(hand != null){
+				//getCardNameメソッドで配列handの要素の値を、それぞれのカードを表す文字列に変換して表示させる。
+				for(int i=0;i<hand.length;i++){
+
+					System.out.print("【"+getCardName(hand[i])+"】");
+
+				}
+
+				//judgeメソッドで配列handの各要素の値からポーカーのどの役が当てはまるか判定し、結果を文字列で変数resultに代入する
+				result = judge(hand);
+
+				//結果を表示する
+				System.out.println("\n役："+ result);
+				System.out.println("得点："+score);
+				if(score>0){
+					doubleUpGame();
+					System.out.println("もう1度遊びますか？Yes=1/No=0");
+					try {
+						s= br.readLine();
+
+						// 正規表現のパターンを作成
+				       m = p.matcher(s);
+
+				        //読み取った文字が数字の0-1を1回繰り返した文字列でなければ不正な値としてやり直す。
+				        while(m.find() == false){
+				        	System.out.println("入力が不正です。");
+				        	s = br.readLine();
+				        	m = p.matcher(s);
+				        }
+
+				        if(s.equals("0")){
+				        	System.out.println("終了します");
+				        	play = false;
+				        }else{
+				        	score =0;
+				        	play = true;
+				        }
+
+					} catch (IOException e) {
+						// TODO 自動生成された catch ブロック
+						e.printStackTrace();
+					}
+				}else{
+				System.out.println("もう1度遊びますか？Yes=1/No=0");
+				try {
+					s= br.readLine();
+
+					// 正規表現のパターンを作成
+			       m = p.matcher(s);
+
+			        //読み取った文字が数字の0-1を1回繰り返した文字列でなければ不正な値としてやり直す。
+			        while(m.find() == false){
+			        	System.out.println("入力が不正です。");
+			        	s = br.readLine();
+			        	m = p.matcher(s);
+			        }
+
+			        if(s.equals("0")){
+			        	System.out.println("終了します");
+			        	play = false;
+			        }else{
+			        	score =0;
+			        	play = true;
+			        }
+
+				} catch (IOException e) {
+					// TODO 自動生成された catch ブロック
+					e.printStackTrace();
+				}
+				}
+			}else{
+
+				if(score>0){
+					System.out.println("得点："+score);
+					doubleUpGame();
+					System.out.println("もう1度遊びますか？Yes=1/No=0");
+					try {
+						s= br.readLine();
+
+						// 正規表現のパターンを作成
+				       m = p.matcher(s);
+
+				        //読み取った文字が数字の0-1を1回繰り返した文字列でなければ不正な値としてやり直す。
+				        while(m.find() == false){
+				        	System.out.println("入力が不正です。");
+				        	s = br.readLine();
+				        	m = p.matcher(s);
+				        }
+
+				        if(s.equals("0")){
+				        	System.out.println("終了します");
+				        	play = false;
+				        }else{
+				        	score =0;
+				        	play = true;
+				        }
+
+					} catch (IOException e) {
+						// TODO 自動生成された catch ブロック
+						e.printStackTrace();
+					}
+
+				}else{
+					System.out.println("もう1度遊びますか？Yes=1/No=0");
+					try {
+						s= br.readLine();
+
+						// 正規表現のパターンを作成
+				       m = p.matcher(s);
+
+				        //読み取った文字が数字の0-1を1回繰り返した文字列でなければ不正な値としてやり直す。
+				        while(m.find() == false){
+				        	System.out.println("入力が不正です。");
+				        	s = br.readLine();
+				        	m = p.matcher(s);
+				        }
+
+				        if(s.equals("0")){
+				        	System.out.println("終了します");
+				        	play = false;
+				        }else{
+				        	score =0;
+				        	play = true;
+				        }
+
+					} catch (IOException e) {
+						// TODO 自動生成された catch ブロック
+						e.printStackTrace();
+					}
+				}
+
+			}
+
+		}while(play);
+		}
+
+
+		static int[] deelCards(int[] cards){
+
+			int hand[] = new int[5];
+
+			Random rand = new Random();
+
+			//配列の要素をシャッフルする
+			for(int i=0;i<cards.length;i++){
+				int ranInt = rand.nextInt(cards.length);
+				int a = cards[ranInt];
+				int b = cards[i];
+				cards[i] = a;
+				cards[ranInt] = b;
+			}
+
+			//シャッフルした配列cardsから先頭5つをhandに代入する
+			for(int i=0;i<hand.length;i++){
+				hand[i] = cards[i];
+			}
+
+			return hand;
+		}
+
+		//5枚のカードを表す配列cardsを受け取って、役の判定の処理を行い結果を文字列で返す
+		static String judge(int cards[]){
+			String result = "ブタ";
+			score = 0;
+			boolean fivecard=false;
+			boolean royal =false;
+			boolean fourcard =false;
+			boolean straight = false;
+			boolean flush = false;
+			boolean fullhouse =false;
+			boolean threecard = false;
+			boolean twopair =false;
+			boolean onepair = false;
+
+			//どうやって判定するか
+			//1~13が♠、14~26が♥、27~39が♦、40~52が♣
+			//まずは、ロイヤルストレートフラッシュの判定をする。
+			//5枚のカードの数字が10~13で一続きであり、絵柄が同じでなければならない。
+			//1枚目のカードと一致するカードがあるか調べる、2枚目のカードと・・・・を繰り返して何ペアあるかはわかる。
+			//ストレートの判断はどうするか？
+			//フラッシュの判断はどうするか？配列内の全ての値が1~13などの特定の範囲ならばフラッシュ
+
+			//getCardNumメソッドでcardsの各要素をそれぞれトランプの数字に置き換えて、配列cardNumに代入する
+			int[] cardsNum = new int[5];
+			for(int i=0;i<cards.length;i++){
+				cardsNum[i] = getCardNum(cards[i]);
+			}
+
+			//配列cardsNumをソート
+			Arrays.sort(cardsNum);
+
+			//各判定の処理
+
+			int royal_count = 0;
+			int straight_count = 0;
+			int spade_count = 0;
+			int heart_count = 0;
+			int dia_count = 0;
+			int club_count = 0;
+
+			for(int i = 0;i<cards.length;i++){
+				if((cardsNum[i] == 1 || 9 < cardsNum[i])){
+					royal_count++;
+			}
+
+			//各絵柄のcount
+				if(cards[i]<14){
+					spade_count++;
+				}else if(cards[i]>13 && cards[i]<27){
+					heart_count++;
+				}else if(cards[i]>26 && cards[i]<40){
+					dia_count++;
+				}else{
+					club_count++;
+				}
+			}
+
+
+			//royal_countが5ならロイヤル
+			if(royal_count == 5||(royal_count == 4 && (cardsNum[4]==53||cardsNum[4]==54))||(royal_count == 3 && cardsNum[3]==53||cardsNum[4]==54)){
+				royal = true;
+			}
+
+
+			//フラッシュの判定
+			if((spade_count == 5 ||heart_count ==5||dia_count==5||club_count==5)||
+					((spade_count==4||heart_count==4||dia_count==4||club_count==4)&&(cardsNum[4]==53||cardsNum[4]==54))||
+					((spade_count==3||heart_count==3||dia_count==3||club_count==3)&&cardsNum[3]==53&&cardsNum[4]==54)){
+				flush =true;
+			}
+
+			//ストレートの判定
+			for(int i=0;i<cards.length-1;i++){
+				if(cardsNum[i]+1==cardsNum[i+1]){
+					straight_count++;
+				}
+			}
+
+			//count4でストレート確定
+			if(straight_count == 4||((straight_count== 3 && cardsNum[0]==1&&cardsNum[4]==13)&&!(cardsNum[0] == 1&&cardsNum[1]==2))||
+					((straight_count==3)&&(cardsNum[4]==53||cardsNum[4]==54))||(straight_count==2&&cardsNum[3]==53&&cardsNum[4]==54)||
+					(straight_count==2&&cardsNum[0]==1&&!(cardsNum[1]==2)&&(cardsNum[4]==53||cardsNum[4]==54))){
+				straight = true;
+			}
+
+			//ファイブカードの判定[1,2,3,*,*][1,2,3,4,*]
+			if((cardsNum[0]==cardsNum[1]&&cardsNum[1]==cardsNum[2]&&cardsNum[2]==cardsNum[3]&&(cardsNum[4]==53||cardsNum[4]==54))||
+					(cardsNum[0]==cardsNum[1]&&cardsNum[1]==cardsNum[2]&&(cardsNum[3]==53&&cardsNum[4]==54))){
+				fivecard = true;
+			}
+
+			//フォーカードの判定[1,2,3,4][2,3,4,5][1,2,*,*][2,3,*,*][1,2,3,*][2,3,4,*]
+			if((cardsNum[0]==cardsNum[1]&&cardsNum[1]==cardsNum[2]&&cardsNum[2]==cardsNum[3])||
+					(cardsNum[1]==cardsNum[2]&&cardsNum[2]==cardsNum[3]&&cardsNum[3]==cardsNum[4])||
+					((cardsNum[0]==cardsNum[1])&&(cardsNum[3]==53&&cardsNum[4]==54))||((cardsNum[1]==cardsNum[2])&&(cardsNum[3]==53&&cardsNum[4]==54))||
+					((cardsNum[0]==cardsNum[1])&&(cardsNum[1]==cardsNum[2])&&(cardsNum[4]==53||cardsNum[4]==54))||
+					((cardsNum[1]==cardsNum[2])&&(cardsNum[2]==cardsNum[3])&&(cardsNum[4]==53||cardsNum[4]==54))){
+				fourcard = true;
+			}
+
+			//フルハウスの判定[1,2,3&&4,5][1,2&3,4,5]
+			if((cardsNum[0]==cardsNum[1]&&cardsNum[1]==cardsNum[2]&&cardsNum[3]==cardsNum[4])||
+					(cardsNum[0]==cardsNum[1]&&cardsNum[2]==cardsNum[3]&&cardsNum[3]==cardsNum[4])||
+					(cardsNum[0]==cardsNum[1]&&cardsNum[1]==cardsNum[2]&&(cardsNum[4]==53||cardsNum[4]==54))||
+					(cardsNum[0]==cardsNum[1]&&cardsNum[2]==cardsNum[3]&&(cardsNum[4]==53||cardsNum[4]==54))){
+				fullhouse = true;
+			}
+
+			//スリーカードの判定,[1,2,3][2,3,4][4,5,6]
+			if((cardsNum[0]==cardsNum[1]&&cardsNum[1]==cardsNum[2])||(cardsNum[1]==cardsNum[2]&&cardsNum[2]==cardsNum[3])||
+					(cardsNum[2]==cardsNum[3]&&cardsNum[3]==cardsNum[4])||(cardsNum[0]==cardsNum[1]&&(cardsNum[4]==53||cardsNum[4]==54))||
+					(cardsNum[1]==cardsNum[2]&&(cardsNum[4]==53||cardsNum[4]==54))||(cardsNum[2]==cardsNum[3]&&(cardsNum[4]==53||cardsNum[4]==54))){
+				threecard=true;
+			}
+
+			//ツーペアの判定[1,2&3,4][1,2&4,5][2,3&4,5]
+			if((cardsNum[0]==cardsNum[1]&&cardsNum[2]==cardsNum[3])||(cardsNum[0]==cardsNum[1]&&cardsNum[3]==cardsNum[4])||
+					(cardsNum[1]==cardsNum[2]&&cardsNum[3]==cardsNum[4])
+					){
+				twopair=true;
+			}
+
+			//ワンペアの判定[1,2][1,3][1,4][1,5][2,3][2,4][2,5][3,4][3,5][4,5]
+			if((cardsNum[0]==cardsNum[1])||(cardsNum[0]==cardsNum[2])||(cardsNum[0]==cardsNum[3])||(cardsNum[0]==cardsNum[4])||
+					(cardsNum[1]==cardsNum[2])||(cardsNum[1]==cardsNum[3])||(cardsNum[1]==cardsNum[4])||
+					(cardsNum[2]==cardsNum[3])||(cardsNum[2]==cardsNum[4])||(cardsNum[3]==cardsNum[4])||(cardsNum[4]==53||cardsNum[4]==54)){
+				onepair=true;
+			}
+
+			//最終的な役の決定・強さ順に判定
+			if(royal == true && straight ==true && flush == true){
+				result = "ロイヤルストレートフラッシュ";
+				score +=500000;
+			}else if(straight == true && flush ==true){
+				result = "ストレートフラッシュ";
+				score +=250;
+			}else if(fivecard==true){
+				result = "ファイブカード";
+				score +=300;
+			}else if(fourcard == true){
+				result = "フォーカード";
+				score +=150;
+			}else if(fullhouse == true){
+				result = "フルハウス";;
+				score +=100;
+			}else if(flush == true){
+				result = "フラッシュ";
+				score +=50;
+			}else if(straight == true){
+				result = "ストレート";
+				score +=50;
+			}else if(threecard == true){
+				result = "スリーカード";
+				score +=50;
+			}else if(twopair == true){
+				result = "ツーペア";
+				score +=30;
+			}else if(onepair ==true){
+				result = "ワンペア";
+				score +=10;
+			}
+
+			return result;
+		}
+
+		//入れ替えメソッド
+		static int[] changeCards(int[] hand,int[] cards){
+			//標準入力を取り込むbrを作成
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+			System.out.println("入れ替えるカードの番号を入力して下さい。終わる場合は0");
+			System.out.println(" [1]  [2]  [3]  [4]  [5]");
+			try {
+				//標準入力から1行読み取る
+				String s = br.readLine();
+
+				// 正規表現のパターンを作成
+		        Pattern p = Pattern.compile("^[0-5]{1,5}$");
+		        Matcher m = p.matcher(s);
+
+		        //読み取った文字が数字の1-5を1~5回繰り返した文字列でなければ不正な値としてやり直す。
+		        while(m.find() == false){
+		        	System.out.println("入力が不正です。");
+		        	s = br.readLine();
+		        	m = p.matcher(s);
+		        }
+
+		        if(s.equals("0")){
+
+		        	return null;
+		        }else{
+
+		        	char[] ch= s.toCharArray();
+		        	int[] changeNum = new int[5];
+
+
+		        	for(int i=0;i<ch.length;i++){
+
+		    	    	changeNum[i] = Character.getNumericValue(ch[i]);
+
+		    	    	hand[changeNum[i]-1] = cards[i+5];
+
+
+		        	}
+		        }
+
+
+
+
+
+			} catch (IOException e) {
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
+			}
+
+
+
+
+			return hand;
+		}
+
+		//正しいカードの数字・絵柄に変換する
+		static  String getCardName(int i){
+			//スペード＞ハート＞ダイアモンド＞クラブ
+			String name = "";
+
+			if(i<14){
+				name = i+"♠";
+			}else if(i>13 && i<27){
+				i = i-13;
+				name = i+"♥";
+			}else if(i>26 && i<40){
+				i = i-26;
+				name = i+"♦";
+			}else if(i>39 && i<53){
+				i = i-39;
+				name = i+"♣";
+			}else{
+
+				name = "♯";
+			}
+
+			return name;
+		}
+
+
+		//正しいカードの数字に変換する
+		static  int getCardNum(int i){
+			//スペード＞ハート＞ダイアモンド＞クラブ
+			int num;
+
+			if(i<14){
+				num = i;
+			}else if(i>13 && i<27){
+				num = i-13;
+			}else if(i>26 && i<40){
+				num = i-26;
+			}else if(i>39 &&i<53){
+				num = i-39;
+			}else{
+				if(i==53){
+					num =53;
+				}else{
+					num=54;
+				}
+			}
+			return num;
+		}
+
+		//暇つぶし用
+		static void doubleUpGame(){
+			System.out.println("ダブルアップに挑戦しますか？Yes=1/No=0");
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+			Random rand = new Random();
+
+			int q = rand.nextInt(13);;
+			int a = rand.nextInt(13);;
+
+			try {
+				//標準入力から1行読み取る
+				String s = br.readLine();
+
+				// 正規表現のパターンを作成
+		        Pattern p = Pattern.compile("^[0-1]$");
+		        Matcher m = p.matcher(s);
+
+		        //読み取った文字が数字の0-1を1回繰り返した文字列でなければ不正な値としてやり直す。
+		        while(m.find() == false){
+		        	System.out.println("入力が不正です。");
+		        	s = br.readLine();
+		        	m = p.matcher(s);
+		        }
+
+		        if(s.equals("0")){
+		        	System.out.println("終了します");
+
+		        }else{
+		        	boolean isCorrect=true;
+		        	do{
+		        		q = a;
+		    			a = rand.nextInt(13);
+		        		System.out.println("【"+(q+1)+"】");
+		        		System.out.println("HiかLowか入力して下さい　Hi=1 / Low=0");
+
+		        		//標準入力から1行読み取る
+		        		s = br.readLine();
+						m = p.matcher(s);
+
+							//読み取った文字が数字の0-1を1回繰り返した文字列でなければ不正な値としてやり直す。
+						while(m.find() == false){
+							System.out.println("入力が不正です。");
+							s = br.readLine();
+							m = p.matcher(s);
+						}
+
+						if(s.equals("1")){
+							if(a>q){
+								System.out.println("【"+(a+1)+"】"+"正解！");
+								score = score *2;
+								System.out.println("点数："+score);
+
+							}else if(a<q){
+								System.out.println("【"+(a+1)+"】"+"残念！");
+								isCorrect=false;
+							}else{
+								System.out.println("【"+(a+1)+"】"+"ドロー、もう一回！");
+							}
+						}else{
+							if(a<q){
+								System.out.println("【"+(a+1)+"】"+"正解！");
+								score = score *2;
+								System.out.println("点数："+score);
+							}else if(a>q){
+								System.out.println("【"+(a+1)+"】"+"残念！");
+								isCorrect=false;
+							}else{
+								System.out.println("【"+(a+1)+"】"+"ドロー、もう一回！");
+							}
+						}
+
+		        	}while(isCorrect==true);
+
+
+		        	System.out.println("点数："+score);
+
+
+		        }
+
+			} catch (IOException e) {
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
+			}
+
+
+			return;
+		}
+}
